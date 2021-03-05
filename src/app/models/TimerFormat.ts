@@ -5,7 +5,7 @@ export class TimeDigits {
 }
 
 export class TimerFormat {
-    hours: TimeDigits;
-    minutes: TimeDigits;
-    seconds: TimeDigits;
+    hours: string;
+    minutes: string;
+    seconds: string;
 }
