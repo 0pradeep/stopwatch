@@ -1,6 +1,6 @@
 <div style="display: flex; justify-content: space-between; padding: 3% 10%;">
-    <button mat-raised-button style="color: green;" (click)="toggleTimer()">{{ startStopField }}</button>
-    <button mat-raised-button style="color: orange;" (click)="getSplitTime()" [disabled]="!iFirst">Split</button>
+    <button mat-raised-button style="color: green;" (click)="toggleTimer1()">{{ startStopText }}</button>
+    <button mat-raised-button style="color: orange;" (click)="toggleSplitTimer()" [disabled]="iFirst">Split</button>
     <button mat-raised-button style="color: rgb(175, 33, 33);" (click)="resetTimer()" [disabled]="!enableReset">Reset</button>
 </div>
 <div style="display: flex; justify-content: center;">
@@ -8,13 +8,13 @@
         {{ stopwatchTimer.seconds.d1 }}{{ stopwatchTimer.seconds.d2 }}
     </mat-label> -->
     <mat-label style="font-weight: 500; font-size: xx-large; color: blue;">
-        {{ stopwatchTimer }}
+        {{ hours }} : {{ minutes }} : {{ seconds }} : {{ milliseconds }}
     </mat-label>
 </div>
 <br>
 <div style="display: flex; justify-content: center;">
     <mat-label style="font-weight: 500; font-size: large; color: purple;">
-        {{ splitTime }}
+        {{ splitTime1 }}
     </mat-label>
 </div>
 <table>

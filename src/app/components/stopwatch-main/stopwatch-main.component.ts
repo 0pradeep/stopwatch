@@ -19,13 +19,28 @@ export class StopwatchMainComponent implements OnInit {
   sTime: number = 0;
   startStopField: string = 'Start';
   stopwatchTimer: string;
-  splitTime: string;
-  iFirst: boolean = false;
+  iFirst: boolean = true;
   enableReset: boolean = false;
   splitRunning: boolean = false;
   pauseTime: string = '000';
   iPaused: boolean = false;
   timerTable: TimerTable[];
+
+  startText = 'Start';
+  laps: any = [];
+  counter: number;
+  splitCounter: number;
+  timerRef;
+  splitTimerRef;
+  clock: any;
+  minutes: any = '00';
+  seconds: any = '00';
+  hours: any = '00';
+  milliseconds: any = '000';
+  isSplitTimerRunning: boolean = false;
+  startStopText: string = 'Start';
+  splitTime: string;
+  splitTime1: string = '00 : 00 : 00 : 000';
 
   constructor() { }
 
@@ -33,21 +48,21 @@ export class StopwatchMainComponent implements OnInit {
     this.timerTable = [];
     this.resetToInitialTime();
     this.resetSplitTime();
-    timer(0, 1).subscribe(() => {
-      if (this.isTimerRunning)
-        this.millisecs++;
-    })
-    timer(0, 1000).subscribe(() => {
-      if (this.isTimerRunning)
-        this.time++;
-      this.stopwatchTimer = this.formatTimer(this.time);
-      if (this.sTime === -1) this.splitTime = this.stopwatchTimer;
-    });
-    timer(0, 1000).subscribe(() => {
-      if (this.isTimerRunning)
-        this.sTime++;
-      this.splitTime = this.formatTimer(this.sTime);
-    });
+    // timer(0, 1).subscribe(() => {
+    //   if (this.isTimerRunning)
+    //     this.millisecs++;
+    // })
+    // timer(0, 1000).subscribe(() => {
+    //   if (this.isTimerRunning)
+    //     this.time++;
+    //   this.stopwatchTimer = this.formatTimer(this.time);
+    //   if (this.sTime === -1) this.splitTime = this.stopwatchTimer;
+    // });
+    // timer(0, 1000).subscribe(() => {
+    //   if (this.isTimerRunning)
+    //     this.sTime++;
+    //   this.splitTime = this.formatTimer(this.sTime);
+    // });
   }
 
   formatTimer(time: number): string {
@@ -119,10 +134,137 @@ export class StopwatchMainComponent implements OnInit {
     console.log(this.stopwatchTimer);
   }
 
+  toggleTimer1(): void {
+    this.iFirst = false;
+    this.isTimerRunning = !this.isTimerRunning;
+    if (this.isTimerRunning) {
+      this.toggleSplitTimer();
+      this.startStopText = 'Stop';
+      const startTime = Date.now() - (this.counter || 0);
+      this.timerRef = setInterval(() => {
+        this.counter = Date.now() - startTime;
+        this.milliseconds = Math.floor(Math.floor(this.counter % 1000)).toFixed(0);
+        this.minutes = Math.floor(this.counter / 60000);
+        this.seconds = Math.floor(Math.floor(this.counter % 60000) / 1000).toFixed(0);
+        this.hours = Math.floor(this.counter / 600000);
+        if (Number(this.minutes) < 10) {
+          this.minutes = '0' + this.minutes;
+        } else {
+          this.minutes = '' + this.minutes;
+        }
+        if (Number(this.milliseconds) < 100) {
+          let apnd = '0';
+          if (Number(this.milliseconds) < 10) apnd = '00';
+          this.milliseconds = apnd + this.milliseconds;
+        } else {
+          this.milliseconds = '' + this.milliseconds;
+        }
+        if (Number(this.seconds) < 10) {
+          this.seconds = '0' + this.seconds;
+        } else {
+          this.seconds = '' + this.seconds;
+        }
+        if (Number(this.hours) < 10) {
+          this.hours = '0' + this.hours;
+        } else {
+          this.hours = '' + this.hours;
+        }
+      });
+    } else {
+      this.startStopText = 'Start';
+      clearInterval(this.timerRef);
+    }
+  }
+
+  toggleSplitTimer() {
+    this.isSplitTimerRunning = !this.isSplitTimerRunning;
+    if (this.isSplitTimerRunning) {
+      let hours: any = '00', minutes: any = '00';
+      let seconds: any = '00', milliseconds: any = '000';
+      const startTime = Date.now() - (this.splitCounter || 0);
+      this.splitTimerRef = setInterval(() => {
+        this.splitCounter = Date.now() - startTime;
+        milliseconds = Math.floor(Math.floor(this.splitCounter % 1000)).toFixed(0);
+        minutes = Math.floor(this.splitCounter / 60000);
+        console.log(minutes);
+        
+        seconds = Math.floor(Math.floor(this.splitCounter % 60000) / 1000).toFixed(0);
+        hours = Math.floor(this.splitCounter / 600000);
+        if (Number(this.minutes) < 10) {
+          minutes = '0' + this.minutes;
+        } else {
+          minutes = '' + this.minutes;
+        }
+        if (Number(this.milliseconds) < 100) {
+          let apnd = '0';
+          if (Number(this.milliseconds) < 10) apnd = '00';
+          milliseconds = apnd + this.milliseconds;
+        } else {
+          milliseconds = '' + this.milliseconds;
+        }
+        if (Number(this.seconds) < 10) {
+          seconds = '0' + this.seconds;
+        } else {
+          seconds = '' + this.seconds;
+        }
+        if (Number(this.hours) < 10) {
+          hours = '0' + this.hours;
+        } else {
+          hours = '' + this.hours;
+        }
+        this.splitTime1 = `${hours} : ${minutes} : ${seconds} : ${milliseconds}`;
+      });
+    } else {
+      clearInterval(this.splitTimerRef);
+    }
+  }
+
+  clearTimer() {
+    this.isTimerRunning = false;
+    this.startText = 'Start';
+    this.counter = undefined;
+    this.milliseconds = '000';
+    this.seconds = '00';
+    this.minutes = '00';
+    this.laps = [];
+    clearInterval(this.timerRef);
+  }
+
   resetTimer() {
     this.resetToInitialTime();
     this.resetSplitTime();
     this.timerTable.length = 0;
   }
 
+  startTimer() {
+    this.isTimerRunning = !this.isTimerRunning;
+    if (this.isTimerRunning) {
+      this.startText = 'Stop';
+      const startTime = Date.now() - (this.counter || 0);
+      this.timerRef = setInterval(() => {
+        this.counter = Date.now() - startTime;
+        this.milliseconds = Math.floor(Math.floor(this.counter % 1000) / 10).toFixed(0);
+        this.minutes = Math.floor(this.counter / 60000);
+        this.seconds = Math.floor(Math.floor(this.counter % 60000) / 1000).toFixed(0);
+        if (Number(this.minutes) < 10) {
+          this.minutes = '0' + this.minutes;
+        } else {
+          this.minutes = '' + this.minutes;
+        }
+        if (Number(this.milliseconds) < 10) {
+          this.milliseconds = '0' + this.milliseconds;
+        } else {
+          this.milliseconds = '' + this.milliseconds;
+        }
+        if (Number(this.seconds) < 10) {
+          this.seconds = '0' + this.seconds;
+        } else {
+          this.seconds = '' + this.seconds;
+        }
+      });
+    } else {
+      this.startText = 'Start';
+      clearInterval(this.timerRef);
+    }
+  }
 }

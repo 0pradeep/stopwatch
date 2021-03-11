@@ -9,11 +9,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
+import { StopwatchComponent } from './components/stopwatch/stopwatch.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    StopwatchMainComponent
+    StopwatchMainComponent,
+    StopwatchComponent
   ],
   imports: [
     BrowserModule,
