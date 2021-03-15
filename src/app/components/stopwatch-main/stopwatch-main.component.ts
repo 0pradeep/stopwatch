@@ -42,6 +42,11 @@ export class StopwatchMainComponent implements OnInit {
   splitTime: string;
   splitTime1: string = '00 : 00 : 00 : 000';
 
+  sHours: any = '00';
+  sMinutes: any = '00';
+  sSeconds: any = '00';
+  sMilliSeconds: any = '000';
+
   constructor() { }
 
   ngOnInit(): void {
@@ -171,6 +176,7 @@ export class StopwatchMainComponent implements OnInit {
         }
       });
     } else {
+      this.toggleSplitTimer();
       this.startStopText = 'Start';
       clearInterval(this.timerRef);
     }
@@ -179,40 +185,35 @@ export class StopwatchMainComponent implements OnInit {
   toggleSplitTimer() {
     this.isSplitTimerRunning = !this.isSplitTimerRunning;
     if (this.isSplitTimerRunning) {
-      let hours: any = '00', minutes: any = '00';
-      let seconds: any = '00', milliseconds: any = '000';
-      const startTime = Date.now() - (this.splitCounter || 0);
+      const startTime1 = Date.now() - (this.splitCounter || 0);
       this.splitTimerRef = setInterval(() => {
-        this.splitCounter = Date.now() - startTime;
-        milliseconds = Math.floor(Math.floor(this.splitCounter % 1000)).toFixed(0);
-        minutes = Math.floor(this.splitCounter / 60000);
-        console.log(minutes);
-        
-        seconds = Math.floor(Math.floor(this.splitCounter % 60000) / 1000).toFixed(0);
-        hours = Math.floor(this.splitCounter / 600000);
-        if (Number(this.minutes) < 10) {
-          minutes = '0' + this.minutes;
+        this.splitCounter = Date.now() - startTime1;
+        this.sMilliSeconds = Math.floor(Math.floor(this.splitCounter % 1000)).toFixed(0);
+        this.sMinutes = Math.floor(this.splitCounter / 60000);
+        this.sSeconds = Math.floor(Math.floor(this.splitCounter % 60000) / 1000).toFixed(0);
+        this.sHours = Math.floor(this.splitCounter / 600000);
+        if (Number(this.sMinutes) < 10) {
+          this.sMinutes = '0' + this.sMinutes;
         } else {
-          minutes = '' + this.minutes;
+          this.sMinutes = '' + this.sMinutes;
         }
-        if (Number(this.milliseconds) < 100) {
+        if (Number(this.sMilliSeconds) < 100) {
           let apnd = '0';
-          if (Number(this.milliseconds) < 10) apnd = '00';
-          milliseconds = apnd + this.milliseconds;
+          if (Number(this.sMilliSeconds) < 10) apnd = '00';
+          this.sMilliSeconds = apnd + this.sMilliSeconds;
         } else {
-          milliseconds = '' + this.milliseconds;
+          this.sMilliSeconds = '' + this.sMilliSeconds;
         }
-        if (Number(this.seconds) < 10) {
-          seconds = '0' + this.seconds;
+        if (Number(this.sSeconds) < 10) {
+          this.sSeconds = '0' + this.sSeconds;
         } else {
-          seconds = '' + this.seconds;
+          this.sSeconds = '' + this.sSeconds;
         }
-        if (Number(this.hours) < 10) {
-          hours = '0' + this.hours;
+        if (Number(this.sHours) < 10) {
+          this.sHours = '0' + this.sHours;
         } else {
-          hours = '' + this.hours;
+          this.sHours = '' + this.sHours;
         }
-        this.splitTime1 = `${hours} : ${minutes} : ${seconds} : ${milliseconds}`;
       });
     } else {
       clearInterval(this.splitTimerRef);

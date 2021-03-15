@@ -4,8 +4,8 @@ import { StopwatchMainComponent } from './components/stopwatch-main/stopwatch-ma
 import { StopwatchComponent } from './components/stopwatch/stopwatch.component';
 
 const routes: Routes = [
-  { path: 'main', component: StopwatchMainComponent },
-  { path: '', component: StopwatchComponent }
+  { path: '', component: StopwatchMainComponent },
+  { path: 'main', component: StopwatchComponent }
 ];
 
 @NgModule({
